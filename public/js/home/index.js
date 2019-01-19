@@ -1,5 +1,5 @@
 require(["../config"],function(){
-	require(["swiper","bootstrap","jquery"],function(Swiper){
+	require(["swiper","header","bootstrap","jquery"],function(Swiper){
 		/* 轮播图 */
 		function Index(){
 			this.loadCarouse();
