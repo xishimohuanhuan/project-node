@@ -3,7 +3,8 @@
 define(["jquery","login","register"],function($,loginInit,register){
 	function Header(){
 		this.createDom();
-		this.createModal();
+		this.locallogin();
+		this.outTuchu();
 	}
 	//头部的布局
 	Header.template=`<nav class="navbar navbar-inverse">
@@ -23,23 +24,51 @@ define(["jquery","login","register"],function($,loginInit,register){
 							<li class="active"><a href="/">首页<span class="sr-only">(current)</span></a></li>
 							<li class="pos-hea"><a href="/html/position.html">职位管理</a></li>
 						  </ul>
-						  <ul class="nav navbar-nav navbar-right">
+						  <ul class="nav navbar-nav navbar-right not-login">
 							<li data-toggle="modal" data-target="#loginModal"><a href="#" >登录</a></li>
 							<li data-toggle="modal" data-target="#registerModal"><a href="#">注册</a></li>
 						  </ul>
+							<ul class="nav navbar-nav navbar-right login-welcome hidden">
+							<li><a href="#" >欢迎你:</a></li>
+							<li><a href="#" class="out-event">注销</a></li>
+							</ul>
 						</div><!-- /.navbar-collapse -->
 					  </nav>`;
 	$.extend(Header.prototype,{
 		//动态创建头部DOM节点
 		createDom(){
 			$("header").html(Header.template);
-			
 		},
 		createModal(){
 			/* 创建登录节点login */
 			new loginInit();
 			/* 创建注册节点register */
 			new register();
+		},
+		//判断吗是否登录
+		locallogin(){
+			let user=localStorage.keyname;
+			if(user){
+				//有的登录信息就显示注册的用户信息
+				$(".login-welcome").removeClass("hidden").find("a:first").html("欢迎您："+user).end()
+														.siblings(".not-login").remove();
+			}else{
+				//没有登录就调用创建登录注册的模态框
+				this.createModal();
+			}
+		},
+		//判断注销
+		outTuchu(){
+			$(".out-event").on("click",function(){
+				const url="http://rap2api.taobao.org/app/mock/124733/api/users/logout.do";
+				$.get(url,(res)=>{
+					if(res.res_code && res.res_body.status){
+						//删除本地保存的数据
+						localStorage.removeItem("keyname");
+						window.location.href="/";
+				}
+				});
+			});
 		}
 	});
 	return new Header();

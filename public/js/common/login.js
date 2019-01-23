@@ -3,7 +3,7 @@ define(["jquery"],function(){
 	class LoginModal{
 		constructor() {
 		   this.init();
-			 this.addListen();
+		   this.addListen();
 		}
 		init(){
 			/* 登录模态框的结构拼接 */
@@ -44,30 +44,47 @@ define(["jquery"],function(){
 		}
 		/* 登录事件监听 */
 		addListen(){
+			
 			/* 登录处理 */
 			$(".btn-loginn").on("click",function(){
+				//判断输入信息
+				let userna=$("#loginUsername").val().trim();
+				let passlog=$("#loginPassword").val();
+				let flag="";
+				//判断输入的用户名是否输入
+				if(userna){
+					flag +=1;
+				}else{
+					confirm("用户名不能为空！");
+				}
+				//判断密码是否输入
+				if(passlog){
+					flag +=2;
+				}else{
+					confirm("密码不能为空！");
+				}
 				const url="http://rap2api.taobao.org/app/mock/123756/lagou-login",
 							data=$(".login-form").serialize();
-				/* 发送post请求 */
-				$.post(url,data,(res)=>{
-					//判断是否登录成功
-					if(res.res_code &&res.res_body.status){
-						/* 登录成功 */
-						//console.log(res.res_body.data);
-						/* 登陆成功隐藏警告框 */
-						$(".error-login").addClass("hidden");
-						/* 登录成功隐藏登录模态框 */
-						$("#loginModal").modal("hide");
-						//登录成功后存的登录信息
-						localStorage.setItem("keyname",res.res_body.data.username);
-						//console.log(localStorage.getItem("keyname"));
-					}else{
-						/* 登录失败 显示警告框 */
-						$(".error-login").removeClass("hidden");
-					}
-					
-				},"json");
-				
+				if(flag==="12"){
+					/* 发送post请求 */
+					$.post(url,data,(res)=>{
+						//判断是否登录成功
+						if(res.res_code &&res.res_body.status){
+							/* 登录成功 */
+							/* 登陆成功隐藏警告框 */
+							$(".error-login").addClass("hidden");
+							/* 登录成功隐藏登录模态框 */
+							$("#loginModal").modal("hide");
+							//登录成功后存的登录信息
+							localStorage.setItem("keyname",res.res_body.data.username);
+							//登录成功后刷新页面
+							window.location.reload();
+						}else{
+							/* 登录失败 显示警告框 */
+							$(".error-login").removeClass("hidden");
+						}
+					},"json");
+				}
 			});
 		}
 	}

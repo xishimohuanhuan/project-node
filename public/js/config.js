@@ -6,7 +6,8 @@ require.config({
 		"swiper":"libs/swiper/js/swiper.min",
 		"header":"js/common/header",
 		"login":"js/common/login",
-		"register":"js/common/register"
+		"register":"js/common/register",
+		"template":"libs/art-template/template-web"
 	},
 	shim:{//bootstrap垫片 依赖于jquery
 		"bootstrap":{
